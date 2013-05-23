@@ -29,7 +29,7 @@ function ding_periodical_field_load($entity_type, $entities, $field, $instances,
     // entities are unlikely to change type.
     if ($entity->is('periodical')) {
       $items[$id][0] = array(
-        'provider_id' => $entity->localId,
+        'provider_id' => $entity->getLocalId(),
       );
     }
   }
