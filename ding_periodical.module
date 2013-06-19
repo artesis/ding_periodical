@@ -27,7 +27,7 @@ function ding_periodical_theme() {
 function theme_ding_periodical_issues($variables) {
   $items = array();
   $entity = $variables['elements']['#entity'];
-  $local_id = $entity->localId;
+  $local_id = $entity->getLocalId();
   $elements = array_reverse($variables['elements']['#issues'], TRUE);
 
   foreach ($elements as $volume => $issues) {
@@ -69,13 +69,13 @@ function theme_ding_periodical_issues($variables) {
 
         $holding = array(
           array(
-            'data' => '<div class="periodical-holdings">' . $holding_data . '</div>',
+            'data' => '<div class="periodical-holdings">' . $holding_data . '</div><div id="periodical-id-' . $normalized_id . '" class="periodical-holdings-reserve-button"><button>' . t('Reserve') .'</button></div>',
             'class' => array('periodical-holdings'),
-          )
+          ),
         );
 
         $iss[] = array(
-          'data' => '<span id="periodical-id-' . $normalized_id . '" class="ding-periodical-fold ding-periodical-issue">' . $issue . '</span>',
+          'data' => '<span class="ding-periodical-fold ding-periodical-issue">' . $issue . '</span>',
           'children' => $holding,
         );
       }

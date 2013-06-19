@@ -18,17 +18,15 @@
         $(this).parent().toggleClass('expanded-periodicals-parent');
       });
 
-
-      $('.ding-periodical-issue').mouseover(function() {
-        $(this).next('.item-list').show();
-      });
-
-      $('.ding-periodical-issue').mouseout(function() {
-        $(this).next('.item-list').hide();
-      });
-
       $('.ding-periodical-issue').click(function() {
-        $(this).next('.item-list').hide();
+        var periodicals = $(this).next('.item-list');
+        if (periodicals.css('display') == 'none') {
+          periodicals.show();
+        }
+        else {
+          periodicals.hide();
+        }
+        $('.ding-periodical-issue').not($(this)).next('.item-list').hide();
       });
     }
   }

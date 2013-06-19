@@ -90,3 +90,7 @@
 .ui-dialog-content ul.ding-periodical-foldable {
   background: none
 }
+
+.periodical-holdings-reserve-button {
+  text-align: right;
+}
