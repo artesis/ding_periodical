@@ -38,7 +38,7 @@ function ding_periodical_reservation_menu() {
  */
 function ding_periodical_reservation_init() {
   // We need those only for item landing page.
-  if (arg(0) == 'ting' && arg(1) == 'object') {
+  if (arg(0) == 'search' && arg(1) == 'ting') {
     drupal_add_library('system', 'drupal.ajax');
     drupal_add_library('system', 'jquery.form');
     drupal_add_js(drupal_get_path('module', 'ding_periodical_reservation') . '/js/ding_periodical_reservation.scripts.js');
