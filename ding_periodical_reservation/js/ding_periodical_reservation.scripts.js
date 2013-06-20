@@ -37,7 +37,7 @@
   Drupal.behaviors.ding_periodical_reservation = {
     attach: function (context, settings) {
       Drupal.ajax.prototype.commands.trigger_periodical_reservation = trigger_periodical_reservation;
-      $('.periodical-holdings-reserve-button button', context).once('periodical-holdings-reserve-button', function() {
+      $('.periodical-holdings-reserve-button a.btn', context).once('periodical-holdings-reserve-button', function() {
         var id = Drupal.extractPeriodicalId($(this).parent());
         if (id) {
           var element_settings = {};
