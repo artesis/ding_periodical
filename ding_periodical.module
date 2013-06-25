@@ -29,7 +29,7 @@ function theme_ding_periodical_issues($variables) {
   $entity = $variables['elements']['#entity'];
   $local_id = $entity->getLocalId();
   $elements = array_reverse($variables['elements']['#issues'], TRUE);
-  $reserve_button = l(t('Reserve'), '#', array('attributes' => array('class' => array('btn', 'btn-artesis-turquoise'))));
+  $reserve_button = l(t('Reserve'), '#', array('attributes' => array('class' => array('btn', 'btn-artesis-green'))));
 
   foreach ($elements as $volume => $issues) {
     $iss = array();
