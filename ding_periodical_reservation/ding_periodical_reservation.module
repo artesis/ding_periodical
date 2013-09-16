@@ -111,12 +111,10 @@ class DingPeriodicalReservable extends DingReservationReservableEntity {
   }
 
   public function getProviderId() {
-    // pjo 16-01-12 reservations did not work for alma-periodicals;
-    // switch on provider type
     $type = ding_provider_get_provider_module_name('reservation');
     switch ($type) {
       case 'openruth':
-        return array($this->entity->provider_id, $this->id);
+        return array($this->entity->getLocalId(), $this->id);
       case 'alma':
         return $this->id;
       default:
