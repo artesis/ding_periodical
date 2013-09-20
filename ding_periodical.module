@@ -29,7 +29,6 @@ function theme_ding_periodical_issues($variables) {
   $entity = $variables['elements']['#entity'];
   $local_id = $entity->getLocalId();
   $elements = array_reverse($variables['elements']['#issues'], TRUE);
-  $reserve_button = l(t('Reserve'), '#', array('attributes' => array('class' => array('btn', 'btn-artesis-green'))));
 
   foreach ($elements as $volume => $issues) {
     $iss = array();
@@ -44,6 +43,7 @@ function theme_ding_periodical_issues($variables) {
 
       $holding_data = ding_periodical_holding_data($local_id, $volume, $issue);
 
+      $reserve_button = l('<i class="icon-white icon-ok"></i>&nbsp;' . t('Reserve'), 'ding_periodical_reservation/reserve/' . $normalized_id, array('attributes' => array('class' => array('btn', 'btn-artesis-green', 'use-ajax'), 'id' => array('reserve-' . $normalized_id)), 'absolute' => TRUE, 'html' => TRUE));
       $holding = array(
         array(
           'data' => '<div class="periodical-holdings">' . $holding_data . '</div><div id="periodical-id-' . $normalized_id . '" class="periodical-holdings-reserve-button">' . $reserve_button . '</div>',
@@ -68,7 +68,7 @@ function theme_ding_periodical_issues($variables) {
 
         $holding_data = ding_periodical_holding_data($local_id, $volume, $issue);
 
-
+        $reserve_button = l('<i class="icon-white icon-ok"></i>&nbsp;' . t('Reserve'), 'ding_periodical_reservation/reserve/' . $normalized_id, array('attributes' => array('class' => array('btn', 'btn-artesis-green', 'use-ajax'), 'id' => array('reserve-' . $normalized_id)), 'absolute' => TRUE, 'html' => TRUE));
         $holding = array(
           array(
             'data' => '<div class="periodical-holdings">' . $holding_data . '</div><div id="periodical-id-' . $normalized_id . '" class="periodical-holdings-reserve-button">' . $reserve_button . '</div>',
