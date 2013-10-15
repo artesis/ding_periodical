@@ -1,9 +1,9 @@
 <?php
-
 /**
  * @file
  * Shows issue information on periodicals.
  */
+
 // Load Field module hooks.
 module_load_include('inc', 'ding_periodical', 'ding_periodical.field');
 
@@ -38,17 +38,33 @@ function theme_ding_periodical_issues($variables) {
       $issue = '';
       $issue_id = $issues['']['local_id'];
 
-      $normalized_id = md5($issue_id);
+      $normalized_id = md5($local_id . $issue_id);
       ding_periodical_store_periodical($normalized_id, $issue_id, $volume, $issue, $entity);
 
       $holding_data = ding_periodical_holding_data($local_id, $volume, $issue);
 
-      $reserve_button = l('<i class="icon-white icon-ok"></i>&nbsp;' . t('Reserve'), 'ding_periodical_reservation/reserve/' . $normalized_id, array('attributes' => array('class' => array('btn', 'btn-artesis-green', 'use-ajax'), 'id' => array('reserve-' . $normalized_id)), 'absolute' => TRUE, 'html' => TRUE));
+      $reserve_button = l(
+        '<i class="icon-white icon-ok"></i>&nbsp;' . t('Reserve'),
+        'ding_periodical_reservation/reserve/' . $normalized_id,
+        array(
+          'attributes' => array(
+            'class' => array('btn', 'btn-artesis-green', 'use-ajax'),
+            'id' => array('reserve-' . $normalized_id),
+          ),
+          'absolute' => TRUE,
+          'html' => TRUE,
+        )
+      );
+      $button_markup = '<div class="periodical-holdings">' . $holding_data
+        . '</div><div id="periodical-id-' . $normalized_id
+        . '" class="periodical-holdings-reserve-button">'
+        . $reserve_button . '</div>';
+
       $holding = array(
         array(
-          'data' => '<div class="periodical-holdings">' . $holding_data . '</div><div id="periodical-id-' . $normalized_id . '" class="periodical-holdings-reserve-button">' . $reserve_button . '</div>',
+          'data' => $button_markup,
           'class' => array('periodical-holdings'),
-        )
+        ),
       );
 
       $vol = array(
@@ -63,12 +79,23 @@ function theme_ding_periodical_issues($variables) {
         $issue = $key;
         $issue_id = $availability['local_id'];
 
-        $normalized_id = md5($issue_id);
+        $normalized_id = md5($local_id . $issue_id);
         ding_periodical_store_periodical($normalized_id, $issue_id, $volume, $issue, $entity);
 
         $holding_data = ding_periodical_holding_data($local_id, $volume, $issue);
 
-        $reserve_button = l('<i class="icon-white icon-ok"></i>&nbsp;' . t('Reserve'), 'ding_periodical_reservation/reserve/' . $normalized_id, array('attributes' => array('class' => array('btn', 'btn-artesis-green', 'use-ajax'), 'id' => array('reserve-' . $normalized_id)), 'absolute' => TRUE, 'html' => TRUE));
+        $reserve_button = l(
+          '<i class="icon-white icon-ok"></i>&nbsp;' . t('Reserve'),
+          'ding_periodical_reservation/reserve/' . $normalized_id,
+          array(
+            'attributes' => array(
+              'class' => array('btn', 'btn-artesis-green', 'use-ajax'),
+              'id' => array('reserve-' . $normalized_id),
+            ),
+            'absolute' => TRUE,
+            'html' => TRUE,
+          )
+        );
         $holding = array(
           array(
             'data' => '<div class="periodical-holdings">' . $holding_data . '</div><div id="periodical-id-' . $normalized_id . '" class="periodical-holdings-reserve-button">' . $reserve_button . '</div>',
@@ -125,11 +152,14 @@ function ding_periodical_store_periodical($normalized_id = '', $issue_id = NULL,
 /**
  * Fetch periodical availability table.
  *
- * @param $item
+ * @param string $item
  *   Ting object local id, parent of periodical.
- * @param $periodical
+ * @param string $volume
  *   Periodical id.
- * @return
+ * @param string $issue_id
+ *   Issue id.
+ *
+ * @return string
  *   HTML markup.
  */
 function ding_periodical_holding_data($item = NULL, $volume = NULL, $issue_id = NULL) {
@@ -158,7 +188,7 @@ function ding_periodical_holding_data($item = NULL, $volume = NULL, $issue_id = 
 /**
  * Build a markup for the availability table.
  *
- * @param $issue
+ * @param array $issue
  *   Issue array, with keys:
  *   - local_id: Periodical identifier.
  *   - provider: Provider identifier, 'alma' here.
@@ -179,7 +209,7 @@ function ding_periodical_holding_data($item = NULL, $volume = NULL, $issue_id = 
  *   since this number comes as a separate value, for the whole
  *   ting item, not the periodicals.
  *
- * @return
+ * @return string
  *   HTML markup for the availability table.
  */
 function ding_periodical_build_table($issue) {
