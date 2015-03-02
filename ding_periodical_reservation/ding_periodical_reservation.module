@@ -13,7 +13,13 @@
  *   Ting object, parent of the periodical.
  */
 function ding_periodical_reservation_button($id, $volume, $issue, $entity) {
-  return drupal_render(ding_provider_get_form('ding_reservation_reserve_form', new DingPeriodicalReservable($id, $volume, $issue, $entity), FALSE));
+  $form = ding_provider_get_form(
+    'ding_reservation_reserve_form',
+    new DingPeriodicalReservable($id, $volume, $issue, $entity),
+    FALSE
+  );
+
+  return drupal_render($form);
 }
 
 /**
@@ -38,7 +44,7 @@ function ding_periodical_reservation_menu() {
  */
 function ding_periodical_reservation_init() {
   // We need those only for item landing page.
-  if (arg(0) == 'ting' && arg(1) == 'object') {
+  if (arg(0) == 'search' && arg(1) == 'ting') {
     drupal_add_library('system', 'drupal.ajax');
     drupal_add_library('system', 'jquery.form');
     drupal_add_js(drupal_get_path('module', 'ding_periodical_reservation') . '/js/ding_periodical_reservation.scripts.js');
@@ -105,12 +111,10 @@ class DingPeriodicalReservable extends DingReservationReservableEntity {
   }
 
   public function getProviderId() {
-    // pjo 16-01-12 reservations did not work for alma-periodicals;
-    // switch on provider type
     $type = ding_provider_get_provider_module_name('reservation');
     switch ($type) {
       case 'openruth':
-        return array($this->entity->provider_id, $this->id);
+        return array($this->entity->getLocalId(), $this->id);
       case 'alma':
         return $this->id;
       default:
@@ -126,6 +130,6 @@ class DingPeriodicalReservable extends DingReservationReservableEntity {
     $title = '@title, vol @volume';
     $title .= !empty($this->issue) ? ', issue @issue' : '';
 
-    return t($title, array('@title' => $this->entity->title, '@volume' => $this->volume, '@issue' => $this->issue));
+    return t($title, array('@title' => $this->entity->getTitle(), '@volume' => $this->volume, '@issue' => $this->issue));
   }
 }
