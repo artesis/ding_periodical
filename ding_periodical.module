@@ -195,7 +195,7 @@ function ding_periodical_build_table($issue) {
     'placement' => t('Placement'),
     'copies' => t('Copies'),
     'home' => t('At home'),
-    'delivery_date' => t('Underway'),
+    'delivery_date' => t('In process'),
   );
 
   $rows = array();
