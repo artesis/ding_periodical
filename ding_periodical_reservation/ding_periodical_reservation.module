@@ -56,13 +56,21 @@ function ding_periodical_reservation_init() {
  *
  * @param $id
  *   Reservable id.
- * @return type
+ * @return
  *   Array, with ajax specific commands.
  */
 function ding_periodical_reservation_ajax_reserve($id = '') {
   $commands = array();
-
-  if (!empty($id)) {
+  global $user;
+  if (!user_is_logged_in()) {
+    // Trigger log-in (the reservation link will be triggered on success).
+    $commands[] = ajax_command_ding_user_authenticate('');
+  }
+  elseif (!ding_user_is_provider_user($user)) {
+    // Error not library user.
+    $commands[] = ajax_command_ding_popup('ding_reservation', t('Error'), '<p>' . t('Only library user can make reservations.') . '</p>');
+  }
+  elseif (!empty($id)) {
     $reservable = isset($_SESSION['ding_periodical_reservation'][$id]) ? $_SESSION['ding_periodical_reservation'][$id] : NULL;
 
     if (is_array($reservable)) {
