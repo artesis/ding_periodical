@@ -1,27 +1,8 @@
 <?php
-
 /**
- * Simple wrapper function to get reservation form.
- *
- * @param $id
- *   Periodical id.
- * @param $volume
- *   Periodical volume.
- * @param $issue
- *   Periodical issue number.
- * @param $entity
- *   Ting object, parent of the periodical.
+ * @file
+ * Module functionality.
  */
-function ding_periodical_reservation_button($id, $volume, $issue, $entity) {
-  $form = ding_provider_get_form(
-    'ding_reservation_reserve_form',
-    new DingPeriodicalReservable($id, $volume, $issue, $entity),
-    FALSE
-  );
-
-  return drupal_render($form);
-}
-
 /**
  * Implements hook_menu().
  */
@@ -47,7 +28,6 @@ function ding_periodical_reservation_init() {
   if (arg(0) == 'search' && arg(1) == 'ting') {
     drupal_add_library('system', 'drupal.ajax');
     drupal_add_library('system', 'jquery.form');
-    drupal_add_js(drupal_get_path('module', 'ding_periodical_reservation') . '/js/ding_periodical_reservation.scripts.js');
   }
 }
 
@@ -74,15 +54,20 @@ function ding_periodical_reservation_ajax_reserve($id = '') {
     $reservable = isset($_SESSION['ding_periodical_reservation'][$id]) ? $_SESSION['ding_periodical_reservation'][$id] : NULL;
 
     if (is_array($reservable)) {
-      $reservation_form = ding_periodical_reservation_button(
-        $reservable['issue_id'],
-        $reservable['volume'],
-        $reservable['key'],
-        $reservable['entity']
+      $form_state = array('values' => array());
+      drupal_form_submit(
+        'ding_reservation_reserve_form',
+        $form_state,
+        new DingPeriodicalReservable(
+          $reservable['issue_id'],
+          $reservable['volume'],
+          $reservable['key'],
+          $reservable['entity']
+        )
       );
 
-      $commands[] = ajax_command_append('html', $reservation_form);
-      $commands[] = ding_periodical_reservation_trigger_periodical_reservation($id);
+      // Return any status messages set by the form.
+      $commands[] = ajax_command_ding_popup('ding_reservation', t('Reservation'), theme('status_messages'));
     }
   }
 
@@ -90,21 +75,6 @@ function ding_periodical_reservation_ajax_reserve($id = '') {
     '#type' => 'ajax',
     '#commands' => $commands,
   );
-}
-
-/**
- * Function wrapper for custom AJAX command.
- *
- * Command for triggering periodical reservation procedure, after a certain
- * reservation form was created.
- */
-function ding_periodical_reservation_trigger_periodical_reservation($entity_id = '') {
-  if (!empty($entity_id)) {
-    return array(
-      'command' => 'trigger_periodical_reservation',
-      'data' => $entity_id,
-    );
-  }
 }
 
 /**
